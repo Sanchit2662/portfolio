@@ -1,40 +1,63 @@
-import { useState } from 'react'
 import { PROFILE } from '../data/content'
+import { useReveal } from '../hooks'
+import { GitHubIcon, LinkedInIcon, MailIcon, SendIcon } from './Icons'
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const ref = useReveal()
+  const { links } = PROFILE
 
-  const onChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
-
-  const onSubmit = (e) => {
-    e.preventDefault()
-    const subject = encodeURIComponent(`Portfolio message from ${form.name || 'someone'}`)
-    const body = encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`)
-    window.location.href = `mailto:${PROFILE.links.email}?subject=${subject}&body=${body}`
-  }
+  const cards = [
+    {
+      icon: <MailIcon />,
+      k: 'mail --to',
+      v: links.email,
+      href: `mailto:${links.email}`,
+    },
+    {
+      icon: <GitHubIcon />,
+      k: 'gh profile view',
+      v: `github.com/${PROFILE.githubUser}`,
+      href: links.github,
+      ext: true,
+    },
+    {
+      icon: <LinkedInIcon />,
+      k: 'open --linkedin',
+      v: 'in/sanchit-kumar',
+      href: links.linkedin,
+      ext: true,
+    },
+    {
+      icon: <SendIcon />,
+      k: 'hire --now',
+      v: 'open to opportunities →',
+      href: `mailto:${links.email}?subject=Let%27s%20work%20together`,
+    },
+  ]
 
   return (
-    <section className="section" id="contact">
-      <h2 className="section__title">START CO-OP</h2>
-      <p className="section__sub">Let&apos;s team up and build something legendary</p>
+    <section id="contact" ref={ref} className="reveal">
+      <p className="prompt">
+        <span className="prompt__ps1">sanchit@cloud</span>
+        <span className="prompt__cmd">ping sanchit <span className="prompt__flag">--anywhere</span></span>
+      </p>
 
-      <form className="contact card" onSubmit={onSubmit}>
-        <label className="field">
-          <span className="field__label">NAME</span>
-          <input name="name" value={form.name} onChange={onChange} placeholder="Enter your name" required />
-        </label>
-        <label className="field">
-          <span className="field__label">EMAIL</span>
-          <input name="email" type="email" value={form.email} onChange={onChange} placeholder="your@email.com" required />
-        </label>
-        <label className="field">
-          <span className="field__label">MESSAGE</span>
-          <textarea name="message" rows="5" value={form.message} onChange={onChange} placeholder="Tell me about your project..." required />
-        </label>
-        <button className="btn btn--primary btn--block" type="submit">
-          ⚡ SEND MESSAGE
-        </button>
-      </form>
+      <div className="contact__grid">
+        {cards.map((c) => (
+          <a
+            className="contact__card"
+            key={c.k}
+            href={c.href}
+            {...(c.ext ? { target: '_blank', rel: 'noreferrer' } : {})}
+          >
+            <span className="contact__icon">{c.icon}</span>
+            <span className="contact__body">
+              <span className="k">{c.k}</span>
+              <span className="v">{c.v}</span>
+            </span>
+          </a>
+        ))}
+      </div>
     </section>
   )
 }

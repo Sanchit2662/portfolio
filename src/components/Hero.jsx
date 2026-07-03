@@ -1,34 +1,38 @@
-import { CodeIcon } from './Icons'
 import { PROFILE } from '../data/content'
+import { useTyped } from '../hooks'
+import Neofetch from './Neofetch'
 
 export default function Hero() {
+  const [cmd, done] = useTyped('whoami')
+
   return (
     <section className="hero" id="about">
-      <div className="hero__grid">
-        <div className="hero__avatar">
-          <div className="avatar-box">
-            <CodeIcon className="avatar-box__code" />
-            <span className="avatar-box__star">★</span>
-          </div>
-          <div className="avatar-tag">PRESS START</div>
-        </div>
+      <p className="prompt">
+        <span className="prompt__ps1">{PROFILE.handle}@{PROFILE.host}</span>
+        <span className="prompt__cmd">{cmd}</span>
+      </p>
 
-        <div className="hero__copy">
-          <p className="hero__eyebrow">// player one ready</p>
-          <h1 className="hero__name">{PROFILE.name}</h1>
-          <p className="hero__role">{PROFILE.title}</p>
-          <p className="hero__desc">{PROFILE.tagline}</p>
-
-          <div className="hero__cta">
-            <a className="btn btn--primary" href="#projects">
-              <CodeIcon width="16" height="16" /> View Projects
-            </a>
-            <a className="btn btn--ghost" href={`mailto:${PROFILE.links.email}`}>
-              ✉ Hire Me
-            </a>
+      {done && (
+        <div className="hero__grid">
+          <div>
+            <div className="hero__status"><i />open to opportunities</div>
+            <h1 className="hero__name">{PROFILE.name}</h1>
+            <p className="hero__role">{PROFILE.title} · LFX mentee 2026</p>
+            <p className="hero__tagline">
+              Building across the stack — <em>distributed systems</em>, cloud
+              infrastructure and on-chain tooling. Sharpened in the open, with
+              50+ PRs merged across CNCF projects along the way.
+            </p>
+            <div className="hero__cta">
+              <a className="btn btn--primary" href="#oss">view open-source work</a>
+              <a className="btn btn--ghost" href={`mailto:${PROFILE.links.email}`}>
+                get in touch
+              </a>
+            </div>
           </div>
+          <Neofetch />
         </div>
-      </div>
+      )}
     </section>
   )
 }
